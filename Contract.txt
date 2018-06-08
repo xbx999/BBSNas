@@ -1,0 +1,57 @@
+"use strict";
+
+var BBSContract = function() {
+    LocalContractStorage.defineMapProperty(this, "dataMap");
+    LocalContractStorage.defineProperty(this, "size");
+    LocalContractStorage.defineProperty(this, "adminAddress");
+};
+
+BBSContract.prototype = {
+
+    init: function() {
+        this.size = 0;
+        this.adminAddress = Blockchain.transaction.from;
+    },
+
+    push: function(strTitle, strContent) {
+        var articleTitle = strTitle.trim();
+        var articleContent = strContent.trim();
+
+        var index = this.size;
+
+        var bbs = new Object();
+        bbs.index = index;
+        bbs.articleTitle = strTitle;
+        bbs.articleContent = strContent;
+        bbs.author = Blockchain.transaction.from;
+        bbs.createDate = Blockchain.transaction.timestamp;
+
+        this.dataMap.set(index, JSON.stringify(bbs));
+        this.size += 1;
+    },
+
+
+    len: function() {
+        return this.size;
+    },
+
+    get: function() {
+        var myArray = [];
+        for (var i = 0; i < this.size; i++) {
+            var object = JSON.parse(this.dataMap.get(i));
+            var from = Blockchain.transaction.from;
+            myArray.push(object);
+        }
+        return myArray;
+    }
+
+};
+
+module.exports = BBSContract;
+
+
+
+n1kBCZ8Wb3z4Wxub2mvuBNCtqdJVqGGLQjS
+0dce7ce5eb7826f2a6c8a0e66242fef8f8cac6f539a71a6e5832024d10fb6b23
+
+
